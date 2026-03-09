@@ -4,17 +4,37 @@ import google.generativeai as genai
 # הגדרת הגדרות עמוד
 st.set_page_config(page_title="English Grammar Tutor", page_icon="📝")
 
+# הזרקת CSS להגדרת כיוון טקסט ותצוגה מימין לשמאל (RTL)
+st.markdown(
+    """
+    <style>
+    /* הפיכת כל העמוד לימין-לשמאל */
+    body, .stApp {
+        direction: rtl;
+    }
+    /* יישור הטקסט לימין עבור כל האלמנטים הרלוונטיים */
+    p, div, input, label, h1, h2, h3, h4, h5, h6 {
+        direction: rtl;
+        text-align: right !important;
+    }
+    /* התאמת מיקום ספינר הטעינה (Spinner) */
+    .stSpinner > div {
+        direction: rtl;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # הגדרת מפתח ה-API של ג'מיני
-# מומלץ להכניס את המפתח לקובץ .streamlit/secrets.toml
-# לדוגמה: GEMINI_API_KEY = "your_api_key_here"
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 except KeyError:
     st.error("לא נמצא מפתח API. אנא ודא שהגדרת את GEMINI_API_KEY ב-st.secrets.")
     st.stop()
 
-# אתחול המודל (gemini-1.5-flash אידיאלי ומהיר למשימות טקסט כאלו)
-model = genai.GenerativeModel('gemini-2.5-flash')
+# אתחול המודל - שימוש ב-flash למניעת חריגה ממכסה
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # ממשק המשתמש
 st.title("מורה פרטי לדקדוק באנגלית 📝")
@@ -48,9 +68,11 @@ if st.button("בדוק דקדוק", type="primary"):
                 # שליחת הבקשה לג'מיני
                 response = model.generate_content(prompt)
                 
-                # הצגת התשובה המעוצבת
+                # הצגת התשובה
                 st.markdown("---")
                 st.markdown(response.text)
                 
             except Exception as e:
-                st.error(f"אירעה שגיאה בתקשורת עם ה-API: {e}")
+                # הצגת הודעת שגיאה מותאמת אם יש בעיה ב-API
+                st.error("אירעה שגיאה בתקשורת עם השרת. ייתכן שיש עומס כרגע, אנא נסה שוב בעוד מספר שניות.")
+                st.exception(e) # מציג את השגיאה המלאה למטה למטרות דיבוג
