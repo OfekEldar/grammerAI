@@ -34,7 +34,7 @@ except KeyError:
     st.stop()
 
 # אתחול המודל - שימוש ב-flash למניעת חריגה ממכסה
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # ממשק המשתמש
 st.title("מורה פרטי לדקדוק באנגלית 📝")
