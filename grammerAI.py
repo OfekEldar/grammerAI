@@ -14,7 +14,7 @@ except KeyError:
     st.stop()
 
 # אתחול המודל (gemini-1.5-flash אידיאלי ומהיר למשימות טקסט כאלו)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.5-pro')
 
 # ממשק המשתמש
 st.title("מורה פרטי לדקדוק באנגלית 📝")
